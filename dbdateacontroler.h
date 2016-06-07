@@ -29,6 +29,8 @@ public slots:
     void loginVerify(QString name,QString password);
 private:
     explicit DBDateaControler(QObject *parent = 0);
+    DBDateaControler(const DBDateaControler&) = delete;
+    ~DBDateaControler();
     void initDBProxy();
 private:
     FormQueryResult* queryResults;

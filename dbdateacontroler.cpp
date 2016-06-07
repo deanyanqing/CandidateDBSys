@@ -11,13 +11,24 @@ DBDateaControler::DBDateaControler(QObject *parent) :
 }
 
 const static int HOME_INDEX=1;
-//NO thread-satety
+
 DBDateaControler* DBDateaControler::getInstance()
 {
-    static DBDateaControler* instance= new DBDateaControler();
-    return instance;
+    //c++11 stardand:If control enters the declaration concurrently while the variable is being initialized,
+    //  the concurrent execution shall wait for completion of the initialization.
+    // Forget Double-check
+    static DBDateaControler instance;
+    return &instance;
 }
 
+DBDateaControler::~DBDateaControler()
+{
+    if(dbProxy)
+    {
+        delete dbProxy;
+        dbProxy = nullptr;
+    }
+}
 void DBDateaControler::nextPageHandler(int currentPage)
 {
     if(QueryResults::getInstance()->getNumberOfPages() > currentPage)
@@ -60,6 +71,7 @@ void DBDateaControler::endHandler()
 
 void DBDateaControler::initDBProxy()
 {
+    //No consideration excetion case
     dbProxy = new DBProxy(this);
 }
 
